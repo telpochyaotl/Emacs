@@ -1,0 +1,35 @@
+#+TITLE: Emacs Configuration in modular Literate Org Files
+
+* Modular Literate Configuration
+
+This is my (Alex Wallace's) Emacs configuration written as a series of literate LSP Org Mode documents which are automatically tangled (all ~src~ blocks extracted to) and saved as ~.el~ files and loaded by the small ~init.el~ file in this folder all at Emacs at startup. 
+
+Some of the configuration files need to be loaded in order to have dependencies loaded correctly. For this, some files may be prefixed, such as ~00_MyConfig.org~ and ~/01_package.org~.
+
+- Some functions may be prefixed with ~aw/~ namespace for uniqueness.
+Without further ado, here starts the configuration sections.
+
+* First step
+
+  - Copy file:init.el.base to file:init.el
+  - Start Emacs and let it download all dependencies
+  - Use Emacs!
+
+* Initial EL
+#+begin_src emacs-lisp
+  ;; All my Emacs configuration is broken down in modular literate org files
+  ;; as explained and organized in MyConfig.org
+#+end_src
+
+* Modules
+- [[file:package.org][Package System Setup]]
+- [[file:ui.org][UI Customizations]]
+- [[file:mini-buffer.org][Minibuffer and Help enhancements]]
+- [[file:org.org][Org Mode Customizations]]
+- [[file:dev.org][Development oriented Customizations]]
+
+* About Emacs, Org Mode and Org Mode Babel
+
+Detailed documentation on Emacs can be read by ~M-x info~, and on /Org Mode/ by typing ~M-x org-info~, In there, there is a /Working with Source Code/ section on how all these code blocks work.  
+
+
