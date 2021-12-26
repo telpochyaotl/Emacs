@@ -1,0 +1,239 @@
+[[https://orgmode.org/][Org Mode]] is a rich document editor, project planner, task and time tracker, blogging engine, literate coding utility and more.
+
+I use it to create structured dynamic documentation and export it to beautiful LaTex produced PDFs, as task manager, and as with this current file, as a documented configuration maker. Sometimes even as a basic spreadsheet. It's a thing of beauty.
+
+* Sections customizations
+
+The following changes font symbols used by Org mode for sections and such things.
+
+#+begin_src emacs-lisp
+  (defun aw/org-font-setup ()
+  ;; Replace list hyphen with dot
+    (font-lock-add-keywords 'org-mode
+                            '(("^ *\\([-]\\) "
+                               (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "⁃")))))))
+  (use-package org
+    :hook (org-mode . aw/org-mode-setup)
+    :config
+    (setq org-ellipsis "▾")
+
+  (use-package org-bullets
+    :after org
+    :hook (org-mode . org-bullets-mode)
+    :custom
+    (org-bullets-bullet-list '("⚫" "⚪" "●" "○" "●" "○" "●")))
+
+#+end_src
+
+The following changes indention in sections, word wrapping and centering of document area in the editor, all just for visual pleasure, doesn't affect exports.
+#+begin_src emacs-lisp
+  (defun aw/org-mode-setup ()
+    (org-indent-mode) ;; Sections are indented by hierarchy
+    (variable-pitch-mode 0) ;;
+    (visual-line-mode 1)) ;; Word wrapping on and navigate accordingly
+
+  ;; Nice visual word wrapping
+  (defun aw/org-mode-visual-fill ()
+    (setq visual-fill-column-width 100
+          visual-fill-column-center-text t)
+    (visual-fill-column-mode 1))
+
+  ;;Centers document within the editor 
+  (use-package visual-fill-column
+    :hook (org-mode . aw/org-mode-visual-fill))
+#+end_src
+
+* Agenda and the like
+
+This block configures agenda, habit tracking, tasks management, refile, tags, views, workflows, capture templates
+#+begin_src emacs-lisp
+    (setq org-agenda-start-with-log-mode t)
+    (setq org-log-done 'time)
+    (setq org-log-into-drawer t)
+
+    (setq org-agenda-files
+          '("~/Projects/Code/emacs-from-scratch/OrgFiles/Tasks.org"
+            "~/Projects/Code/emacs-from-scratch/OrgFiles/Habits.org"
+            "~/Projects/Code/emacs-from-scratch/OrgFiles/Birthdays.org"))
+
+    (require 'org-habit)
+    (add-to-list 'org-modules 'org-habit)
+    (setq org-habit-graph-column 60)
+
+    (setq org-todo-keywords
+      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+        (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+
+    (setq org-refile-targets
+      '(("Archive.org" :maxlevel . 1)
+        ("Tasks.org" :maxlevel . 1)))
+
+    ;; Save Org buffers after refiling!
+    (advice-add 'org-refile :after 'org-save-all-org-buffers)
+
+    (setq org-tag-alist
+      '((:startgroup)
+         ; Put mutually exclusive tags here
+         (:endgroup)
+         ("@errand" . ?E)
+         ("@home" . ?H)
+         ("@work" . ?W)
+         ("agenda" . ?a)
+         ("planning" . ?p)
+         ("publish" . ?P)
+         ("batch" . ?b)
+         ("note" . ?n)
+         ("idea" . ?i)))
+
+    ;; Configure custom agenda views
+    (setq org-agenda-custom-commands
+     '(("d" "Dashboard"
+       ((agenda "" ((org-deadline-warning-days 7)))
+        (todo "NEXT"
+          ((org-agenda-overriding-header "Next Tasks")))
+        (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
+
+      ("n" "Next Tasks"
+       ((todo "NEXT"
+          ((org-agenda-overriding-header "Next Tasks")))))
+
+      ("W" "Work Tasks" tags-todo "+work-email")
+
+      ;; Low-effort next actions
+      ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+       ((org-agenda-overriding-header "Low Effort Tasks")
+        (org-agenda-max-todos 20)
+        (org-agenda-files org-agenda-files)))
+
+      ("w" "Workflow Status"
+       ((todo "WAIT"
+              ((org-agenda-overriding-header "Waiting on External")
+               (org-agenda-files org-agenda-files)))
+        (todo "REVIEW"
+              ((org-agenda-overriding-header "In Review")
+               (org-agenda-files org-agenda-files)))
+        (todo "PLAN"
+              ((org-agenda-overriding-header "In Planning")
+               (org-agenda-todo-list-sublevels nil)
+               (org-agenda-files org-agenda-files)))
+        (todo "BACKLOG"
+              ((org-agenda-overriding-header "Project Backlog")
+               (org-agenda-todo-list-sublevels nil)
+               (org-agenda-files org-agenda-files)))
+        (todo "READY"
+              ((org-agenda-overriding-header "Ready for Work")
+               (org-agenda-files org-agenda-files)))
+        (todo "ACTIVE"
+              ((org-agenda-overriding-header "Active Projects")
+               (org-agenda-files org-agenda-files)))
+        (todo "COMPLETED"
+              ((org-agenda-overriding-header "Completed Projects")
+               (org-agenda-files org-agenda-files)))
+        (todo "CANC"
+              ((org-agenda-overriding-header "Cancelled Projects")
+               (org-agenda-files org-agenda-files)))))))
+
+    (setq org-capture-templates
+      `(("t" "Tasks / Projects")
+        ("tt" "Task" entry (file+olp "~/Projects/Code/emacs-from-scratch/OrgFiles/Tasks.org" "Inbox")
+             "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+
+        ("j" "Journal Entries")
+        ("jj" "Journal" entry
+             (file+olp+datetree "~/Projects/Code/emacs-from-scratch/OrgFiles/Journal.org")
+             "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+             ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
+             :clock-in :clock-resume
+             :empty-lines 1)
+        ("jm" "Meeting" entry
+             (file+olp+datetree "~/Projects/Code/emacs-from-scratch/OrgFiles/Journal.org")
+             "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
+             :clock-in :clock-resume
+             :empty-lines 1)
+
+        ("w" "Workflows")
+        ("we" "Checking Email" entry (file+olp+datetree "~/Projects/Code/emacs-from-scratch/OrgFiles/Journal.org")
+             "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
+
+        ("m" "Metrics Capture")
+        ("mw" "Weight" table-line (file+headline "~/Projects/Code/emacs-from-scratch/OrgFiles/Metrics.org" "Weight")
+         "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
+
+    (define-key global-map (kbd "C-c j")
+      (lambda () (interactive) (org-capture nil "jj")))
+
+    (aw/org-font-setup))
+
+#+end_src
+
+* LaTex
+
+Customizing Org-LaTex to my satisfaction.
+
+At the moment I place a number of headers and other config in ~~/Emacs/Org/Config/LaTex.org~ which I include from ~.org~ files which I plan to export to LaTex. Some other config that I have not yet figured out how to place in the file are /tangled/ from here. I'm still not fully decided if I should have one single place for all the config and which one it would be and don't even know if it's fully possible. So the current state of things is, a bit here and a lot in the include file.
+
+#+begin_src emacs-lisp
+;; Org latex export customizations
+(setq org-latex-toc-command "\\tableofcontents \\clearpage")
+(setq org-export-preserve-breaks 1)
+#+end_src
+
+* Diagrams with Plantuml
+
+#+begin_src emacs-lisp
+  (use-package plantuml-mode
+  :config
+  (setq org-plantuml-jar-path (expand-file-name "/Users/aw/Java/plantuml/plantuml.jar")))
+#+end_src
+
+* Babel Languages
+
+To execute or export code in ~org-mode~ code blocks, to set up ~org-babel-load-languages~. [[https://orgmode.org/worg/org-contrib/babel/languages/index.html][This page]] documents all supported languages.
+
+#+begin_src emacs-lisp
+
+  (org-babel-do-load-languages
+    'org-babel-load-languages
+    '((emacs-lisp . t)
+      (lisp . t)
+      (js . t)
+      (latex . t)
+      (sql . t)
+      (java . t)
+      (plantuml . t)))
+
+  (push '("conf-unix" . conf-unix) org-src-lang-modes)
+
+#+end_src
+
+* Structure templates
+
+Allow creating structure templates easily by typing, for example, ~<el TAB~ to create an ~emacs-lisp~ src block.
+
+#+begin_src emacs-lisp
+  (require 'org-tempo)
+  (add-to-list 'org-structure-template-alist '("sh"  . "src shell"))
+  (add-to-list 'org-structure-template-alist '("el"  . "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("cl"  . "src lisp"))
+  (add-to-list 'org-structure-template-alist '("js"  . "src js"))
+  (add-to-list 'org-structure-template-alist '("uml" . "src plantuml"))
+  (add-to-list 'org-structure-template-alist '("sql" . "src sql"))
+#+end_src
+
+* Spelling
+
+#+begin_src emacs-lisp
+  (dolist (hook '(org-mode-hook))
+    (add-hook hook (lambda () (flyspell-mode 1))))
+
+  ;; To disable flyspell from some modes use something like
+  ;; (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+  ;;   (add-hook hook (lambda () (flyspell-mode -1))))
+
+  ;; If i ever want to use righ click (two finger click on mac)
+   (eval-after-load "flyspell"
+    '(progn
+       (define-key flyspell-mouse-map [down-mouse-3] #'flyspell-correct-word)
+         (define-key flyspell-mouse-map [mouse-3] #'undefined)))
+
+#+end_src

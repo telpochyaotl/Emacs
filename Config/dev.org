@@ -1,0 +1,72 @@
+Emacs configuration related to all kinds of Development activities are contained here.
+
+* General development oriented config
+
+#+begin_src emacs-lisp
+  ;; Number on columns when it makes sense
+  (column-number-mode)        
+  (global-display-line-numbers-mode t)
+  ;; Disable line numbers for some modes
+  (dolist (mode '(org-mode-hook
+                  term-mode-hook
+                  shell-mode-hook
+                  eshell-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+  ;; Paring delimiters (by colors and status line)
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+
+  ;; Allow common project editor configuration (~.editorconfig~)
+  (use-package editorconfig
+    :ensure t
+    :config
+    (editorconfig-mode 1))
+
+#+end_src
+
+* Js Specific config
+#+begin_src emacs-lisp
+(setq js-indent-level 2) ;; 2 spece indentation
+#+end_src
+* PlantUml Specific config
+#+begin_src emacs-lisp
+(setq plantuml-indent-level 2) ;; 2 spece indentation
+#+end_src
+* Projectile 
+
+[[https://projectile.mx/][Projectile]] is a project management library for Emacs which makes it a lot easier to navigate around code projects for various languages. 
+
+#+begin_src emacs-lisp
+  ;; Git based Project Management
+  (use-package projectile
+    :diminish projectile-mode
+    :config (projectile-mode)
+    :custom ((projectile-completion-system 'ivy))
+    :bind-keymap
+    ("C-x p" . projectile-command-map)
+    :init
+    (setq projectile-project-search-path '("~/Development.local/Clients/Alchemy/git" "~/Development.local/Clients/Alchemy/Zosi/git/zosi" "~/Development.local/Clients/Alchemy/ContentBuilder/git/ContentBuilder" "~/Development.local/Clients/Alchemy/Manager/git/manager"))
+    (setq projectile-switch-project-action #'projectile-dired))
+#+end_src
+* Git
+
+- [[https://magit.vc/][Magit]] is an awesome UI for git operations.
+- [[https://magit.vc/manual/ghub/index.html#SEC_Contents][Forge]] is a package that enhances Magit to deal with GitHub operations.
+
+#+begin_src emacs-lisp
+
+  ;; Git via Magit!
+  (use-package magit
+    :custom
+    (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+  (use-package forge
+    :init
+    (setq auth-sources '("~/.authinfo")))
+
+#+end_src
+* LSP
+Language Server Protocol is big enought that it will get it's own file here:
+- [[file:lsp.org][LSP Configuration]]
+

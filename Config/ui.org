@@ -1,0 +1,69 @@
+* Basic config
+
+Minimalistic UI from the start.
+
+#+begin_src emacs-lisp
+  ;; initial GUI window placement and size
+  (setq initial-frame-alist
+        (append initial-frame-alist
+                '((left   . 550)
+                  (top    . 30)
+                  (width  . 110)
+                  (height . 40))))
+
+  ;; no splash on emacs start
+  (setq inhibit-startup-message t)
+
+  (scroll-bar-mode -1)        ; Disable visible scrollbar
+  (tool-bar-mode -1)          ; Disable the toolbar
+  (tooltip-mode -1)           ; Disable tooltips
+  (set-fringe-mode 10)        ; Give some breathing room
+  (menu-bar-mode -1)          ; Disable the menu bar
+  (setq visible-bell t)       ; No beeps, but flash
+#+end_src
+
+* Font Configuration
+
+#+begin_src emacs-lisp
+
+  ;; big font, that's all i need!
+  (set-face-attribute 'default nil :height 190)
+
+#+end_src
+
+* Color theme
+
+You can run ~M-x counsel-load-theme~ to choose between themes easily.
+
+#+begin_src emacs-lisp
+(load-theme 'leuven)
+#+end_src
+
+* Modeline
+
+Currently using [[https://github.com/seagle0128/doom-modeline][doom-modeline]] which seems attractive, rich, yet still minimal.
+
+By setting  height to *1* I'm acheiving a real minimal look. If I get tired of it, making it say .85 makes it much fatter.
+
+Check out the [[https://github.com/seagle0128/doom-modeline#customize][configuration options]] for more things you can enable or disable.
+
+*NOTE:* The first time you load your configuration on a new machine, you'll need to run `M-x all-the-icons-install-fonts` so that mode line icons display correctly.
+
+#+begin_src emacs-lisp
+  (use-package all-the-icons)
+
+  (use-package doom-modeline
+    :ensure t
+    :init (doom-modeline-mode 1)
+    :custom-face
+    (mode-line ((t (:height 0.85))))
+    (mode-line-inactive ((t (:height 0.85))))
+    :custom
+    (doom-modeline-height 10)
+    (doom-modeline-bar-width 2)
+    (doom-modeline-lsp t)
+    (doom-modeline-github t)
+    (doom-modeline-buffer-encoding t)
+    (doom-modeline-major-mode-icon t))
+#+end_src
+

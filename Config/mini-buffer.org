@@ -1,0 +1,60 @@
+* Which Key
+Package [[https://github.com/justbur/emacs-which-key][which-key]] is a panel that appears when you start pressing any key binding in Emacs to offer you all possible completions for the prefix. Useful for learning the possible key bindings in your current buffer mode. I like it but only i
+
+#+begin_src emacs-lisp
+;; Show all available options for key bindings when typed
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 5))
+#+end_src
+* Ivy and Counsel
+
+[[https://oremacs.com/swiper/][Ivy]] is a powerful completion framework. It provides a selection menu that appears when you open files, switch buffers, and for many other tasks in Emacs.
+
+Counsel tries to ensure commands make best use of ivy
+
+[[Https://github.com/Yevgnen/ivy-rich][Ivy-rich]] adds extra columns to a few of the Counsel commands to provide more information about each item.
+
+I really like regular Emacs' isearch but swiper is very powerful, so I use both by using different keybindings.
+
+#+begin_src emacs-lisp
+  (use-package counsel
+    :bind (("M-x" . counsel-M-x)
+           ("M-s" . swiper-isearch)
+           ("C-x b" . counsel-switch-buffer)
+           ("C-x C-f" . counsel-find-file)
+           :map minibuffer-local-map
+           ("C-r" . 'counsel-minibuffer-history))
+    :config
+      (ivy-mode 1)  
+    :diminish  
+  )
+
+  (use-package ivy-rich
+    :init
+    (ivy-rich-mode 1))
+#+end_src
+* Helpful (better help)
+
+[[https://github.com/Wilfred/helpful][Helpful]] adds extra information to Emacs' =describe-= command buffers. 
+
+#+begin_src emacs-lisp
+  (use-package helpful
+    :custom
+    (counsel-describe-function-function #'helpful-callable)
+    (counsel-describe-variable-function #'helpful-variable)
+    :bind
+    ([remap describe-function] . counsel-describe-function)
+    ([remap describe-command] . helpful-command)
+    ([remap describe-variable] . counsel-describe-variable)
+    ([remap describe-key] . helpful-key))
+#+end_src
+* Filesystem searching
+#+begin_src emacs-lisp
+;; Advanced find methods
+(use-package ag)
+(use-package ripgrep)
+#+end_src
+
