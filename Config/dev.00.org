@@ -23,12 +23,19 @@ Emacs configuration related to all kinds of Development activities are contained
     :config
     (editorconfig-mode 1))
 
+  (use-package flycheck
+    :ensure t
+    :init (global-flycheck-mode))
 #+end_src
 
 * Js Specific config
+
+- TODO: Configure Flycheck to work with local eslint (i had it before!)
+  
 #+begin_src emacs-lisp
 (setq js-indent-level 2) ;; 2 spece indentation
 #+end_src
+
 * PlantUml Specific config
 #+begin_src emacs-lisp
 (setq plantuml-indent-level 2) ;; 2 spece indentation
@@ -66,7 +73,22 @@ Emacs configuration related to all kinds of Development activities are contained
     (setq auth-sources '("~/.authinfo")))
 
 #+end_src
+
 * LSP
-Language Server Protocol is big enought that it will get it's own file here:
+Language Server Protocol is big enought that it will get it's own file here, if I ever decide to use it.:
 - [[file:lsp.org][LSP Configuration]]
+
+* Typescript
+
+I was thinking on setting up LSP, and I might, but it didn't work out ouf the box as I expected. Then found [[https://github.com/ananthakumaran/tide][tide]] and for now this might be it.
+
+- [[https://github.com/ananthakumaran/tide][Tide]]
+#+begin_src emacs-lisp
+  (use-package tide
+    :ensure t
+    :after (typescript-mode company flycheck)
+    :hook ((typescript-mode . tide-setup)
+           (typescript-mode . tide-hl-identifier-mode)
+           (before-save . tide-format-before-save)))
+#+end_src
 
