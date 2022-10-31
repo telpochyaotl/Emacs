@@ -19,26 +19,29 @@ Counsel tries to ensure commands make best use of ivy
 
 I really like regular Emacs' isearch but swiper is very powerful, so I use both by using different keybindings.
 
-#+begin_src emacs-lisp
-  (use-package counsel
-    :bind (("M-x" . counsel-M-x)
-           ("M-s" . swiper-isearch)
-           ("C-x b" . counsel-switch-buffer)
-           ("C-x C-f" . counsel-find-file)
-           :map minibuffer-local-map
-           ("C-r" . 'counsel-minibuffer-history))
-    :config
-      (ivy-mode 1)  
-    :diminish  
-  )
+UPDATE: I didn't fully like the experience, have turned it off to see if I miss anything from it or if I should look for something better. Maybe it was Ivy, Maybe Counsel, or Both.... Dunno yet...
 
-  (use-package ivy-rich
-    :init
-    (ivy-rich-mode 1))
+#+begin_src emacs-lisp
+;  (use-package counsel
+;    :bind (("M-x" . counsel-M-x)
+;           ("M-s" . swiper-isearch)
+;           ("C-x b" . counsel-switch-buffer)
+;           ("C-x C-f" . counsel-find-file)
+;           :map minibuffer-local-map
+;           ("C-r" . 'counsel-minibuffer-history))
+;    :config
+;      (ivy-mode 1)
+;    :diminish
+;  )
+;
+;  (use-package ivy-rich
+;    :init
+;    (ivy-rich-mode 1))
 #+end_src
+
 * Helpful (better help)
 
-[[https://github.com/Wilfred/helpful][Helpful]] adds extra information to Emacs' =describe-= command buffers. 
+[[https://github.com/Wilfred/helpful][Helpful]] adds extra information to Emacs' =describe-= command buffers.
 
 #+begin_src emacs-lisp
   (use-package helpful
@@ -51,6 +54,7 @@ I really like regular Emacs' isearch but swiper is very powerful, so I use both 
     ([remap describe-variable] . counsel-describe-variable)
     ([remap describe-key] . helpful-key))
 #+end_src
+
 * Filesystem searching
 #+begin_src emacs-lisp
 ;; Advanced find methods
@@ -58,3 +62,17 @@ I really like regular Emacs' isearch but swiper is very powerful, so I use both 
 (use-package ripgrep)
 #+end_src
 
+* Situational Memory: Remember where you've been by Dogears
+
+#+begin_src emacs-lisp
+
+  (use-package dogears
+    :bind (:map global-map
+                ("M-g d" . dogears-go)
+                ("M-g r" . dogears-remember)
+                ("M-g M-b" . dogears-back)
+                ("M-g M-f" . dogears-forward)
+                ("M-g M-d" . dogears-list)
+                ("M-g M-D" . dogears-sidebar)))
+
+#+end_src

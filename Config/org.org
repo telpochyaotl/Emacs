@@ -34,7 +34,7 @@ The following changes indention in sections, word wrapping and centering of docu
 
   ;; Nice visual word wrapping
   (defun aw/org-mode-visual-fill ()
-    (setq visual-fill-column-width 100
+    (setq visual-fill-column-width 105
           visual-fill-column-center-text t)
     (visual-fill-column-mode 1))
 
@@ -200,6 +200,7 @@ To execute or export code in ~org-mode~ code blocks, to set up ~org-babel-load-l
       (latex . t)
       (sql . t)
       (java . t)
+      (calc . t)
       (plantuml . t)))
 
   (push '("conf-unix" . conf-unix) org-src-lang-modes)
@@ -218,6 +219,7 @@ Allow creating structure templates easily by typing, for example, ~<el TAB~ to c
   (add-to-list 'org-structure-template-alist '("js"  . "src js"))
   (add-to-list 'org-structure-template-alist '("uml" . "src plantuml"))
   (add-to-list 'org-structure-template-alist '("sql" . "src sql"))
+  (add-to-list 'org-structure-template-alist '("quote" . "src quote"))
 #+end_src
 
 * Spelling
