@@ -1,0 +1,9 @@
+This file contains all kinds of general and miscelaneous config that I don't know where else to categorize.
+
+* Replace list-buffers
+
+Replacing list buffers with a more advance buffer manager
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+#+end_src

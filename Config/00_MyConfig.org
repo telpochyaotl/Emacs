@@ -23,6 +23,7 @@ Without further ado, here starts the configuration sections.
 
 * Modules
 - [[file:package.org][Package System Setup]]
+- [[file:02_util.org][General Utilities]]
 - [[file:ui.org][UI Customizations]]
 - [[file:mini-buffer.org][Minibuffer and Help enhancements]]
 - [[file:org.org][Org Mode Customizations]]
