@@ -1,0 +1,23 @@
+
+#+begin_src emacs-lisp
+  (use-package emacs
+    :init
+    (setq inhibit-startup-message t) ; no splash on emacs start
+    (tool-bar-mode -1)               ; disable Toolbar (the graphic icons)
+    (menu-bar-mode -1)               ; disable the menu bar
+    (tooltip-mode -1)                ; disable tooltips
+    (when scroll-bar-mode
+      (scroll-bar-mode -1))          ; disable the toolbar
+    (set-fringe-mode 10)             ; give some breathing room around things
+    (setq visible-bell t)            ; no beeps, but flash
+
+    ;; big font, that's all i need!
+    (set-face-attribute 'default nil :height 190)
+
+    ;; themes!
+    ;;(load-theme 'wombat)           ; dark
+    ;;(load-theme 'dichromacy)       ; light
+    (load-theme 'leuven)             ; light and nice!
+
+    (fido-vertical-mode))            ; expands M-x options vertically a la fido
+#+end_src
