@@ -7,6 +7,7 @@ This is my (Alex Wallace's) Emacs configuration written as a series of literate 
 Some of the configuration files need to be loaded in order to have dependencies loaded correctly. For this, some files may be prefixed, such as ~00_MyConfig.org~ and ~/01_package.org~.
 
 - Some functions may be prefixed with ~aw/~ namespace for uniqueness.
+  
 Without further ado, here starts the configuration sections.
 
 * First step
@@ -16,6 +17,7 @@ Without further ado, here starts the configuration sections.
   - Use Emacs!
 
 * Initial EL
+
 #+begin_src emacs-lisp
   ;; All my Emacs configuration is broken down in modular literate org files
   ;; as explained and organized in MyConfig.org
@@ -31,6 +33,6 @@ Without further ado, here starts the configuration sections.
 
 * About Emacs, Org Mode and Org Mode Babel
 
-Detailed documentation on Emacs can be read by ~M-x info~, and on /Org Mode/ by typing ~M-x org-info~, In there, there is a /Working with Source Code/ section on how all these code blocks work.  
+Detailed documentation on Emacs can be read by ~M-x info~, and on /Org Mode/ by typing ~M-x org-info~, In there, there is a /Working with Source Code/ section on how all these code blocks work.
 
 
