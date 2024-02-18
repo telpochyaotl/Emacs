@@ -1,12 +1,27 @@
 This configuration was Inspired by [[https://justinbarclay.ca/posts/from-zero-to-ide-with-emacs-and-lsp/][From Zero to IDE with Emacs and LSP]] but was complimented by other information found there and elsewhere and some changes of my own when necessary.
 
+* Git
+
+- [[https://magit.vc/][Magit]] is an awesome UI for git operations.
+- [[https://magit.vc/manual/ghub/index.html#SEC_Contents][Forge]] is a package that enhances Magit to deal with GitHub operations.
+
+#+begin_src emacs-lisp
+  ;; Git via Magit!
+  (use-package magit
+    :ensure magit
+    :custom
+    (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+#+end_src
+
+
 * Tree-Sitter Source Code Parsing library
 
 See [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][How to get Started with Tree-Sitter]]
 
 To install the language grammars you must run the command ~treesit-install-language-grammar~ and select the language you want to install.
 
--EG: ~M-x treesit-install-language-grammar RET javascript RET~ 
+-EG: ~M-x treesit-install-language-grammar RET javascript RET~
 
 #+begin_src emacs-lisp
   (setq treesit-language-source-alist
@@ -63,9 +78,9 @@ Config for the typescript-ts-mode
   (use-package typescript-ts-mode
     :ensure typescript-ts-mode
     :defer 't
-    :mode "\\.ts\\'"    
+    :mode "\\.ts\\'"
     :custom
     (typescript-indent-level 2)
     :config
     (unbind-key "M-." typescript-ts-base-mode-map)) ; unsure why yet
-#+end_src    
+#+end_src

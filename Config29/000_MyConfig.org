@@ -27,7 +27,11 @@ Without further ado, here starts the configuration sections.
 
 * Modules
 
-These are links to all my configuration files
+These are links to all my configuration files which may have some relevant notes
+
+** [[file:020_Development.org][020_Development.org]]
+
+- There are some manual steps to install development languages grammar files.
 
 * About Emacs, Org Mode and Org Mode Babel
 
