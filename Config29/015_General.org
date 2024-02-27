@@ -1,0 +1,7 @@
+* Filesystem searching
+
+#+begin_src emacs-lisp
+;; Advanced find methods
+(use-package ag)
+(use-package ripgrep)
+#+end_src
