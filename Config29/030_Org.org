@@ -16,28 +16,6 @@ Add ~-*- org -*-~ to the (sans the tildes) to the first line of any file you wan
 
 * Sections customizations
 
-The following changes font symbols used by Org mode for sections and such things.
-
-#+begin_src emacs-lisp
-  (defun aw/org-font-setup ()
-  ;; Replace list hyphen with dot
-    (font-lock-add-keywords 'org-mode
-                            '(("^ *\\([-]\\) "
-                               (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "⁃")))))))
-  (use-package org
-    :hook (org-mode . aw/org-mode-setup)
-    :config
-    (setq org-ellipsis "▾"))
-
-  (use-package org-bullets
-    :after org
-    :hook (org-mode . org-bullets-mode)
-    :custom
-    (org-bullets-bullet-list '("⚫" "⚪" "●" "○" "●" "○" "●")))
-
-  (aw/org-font-setup)
-#+end_src
-
 The following changes indention in sections, word wrapping and centering of document area in the editor, all just for visual pleasure, doesn't affect exports.
 #+begin_src emacs-lisp
   (defun aw/org-mode-setup ()
@@ -67,7 +45,7 @@ This block configures agenda and related functionality. I still don't know a lot
                           "~/Emacs/Org/Agenda/RootWurks.txt"
                           "~/Emacs/Org/Agenda/TlaliYoltok.Campestre.txt"
                           "~/Emacs/Org/Agenda/TlaliYoltok.SPR.txt"
-                          "~/Emacs/Org/Agenda/TlaliYoltok.SanGeronimo.txt"))
+                          "~/Emacs/Org/Agenda/TlaliYoltok.SGA.txt"))
 
 #+end_src
 

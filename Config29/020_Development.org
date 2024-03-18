@@ -1,5 +1,55 @@
 This configuration was Inspired by [[https://justinbarclay.ca/posts/from-zero-to-ide-with-emacs-and-lsp/][From Zero to IDE with Emacs and LSP]] but was complimented by other information found there and elsewhere and some changes of my own when necessary.
 
+* General development oriented config
+
+#+begin_src emacs-lisp
+  ;; Number on columns when it makes sense
+  (column-number-mode)
+  (global-display-line-numbers-mode t)
+
+  ;; Disable line numbers for some modes
+  (dolist (mode '(org-mode-hook
+		  term-mode-hook
+		  shell-mode-hook
+		  eshell-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+  ;; Paring delimiters (by colors and status line)
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+
+  ;; Allow common project editor configuration (~.editorconfig~)
+  (use-package editorconfig
+    :ensure t
+    :config
+    (editorconfig-mode 1))
+
+  (use-package flymake
+    :ensure t
+    :hook (prog-mode . flymake-mode))
+
+  ;; get env vars from shell
+  ;; If this fails next time, may need to find a way to
+  ;; (when (daemonp)
+  ;; (exec-path-from-shell-initialize))
+  ;; from inside use-package (need to learn morea about use-package :/
+  (use-package exec-path-from-shell
+    :commands (exec-path-from-shell)
+    :ensure t)
+
+  ;; completion via company mode
+  (use-package company
+    :ensure t
+    :commands (global-company-mode)
+    :init
+    (global-company-mode)
+    :custom
+    (company-tooltip-align-annotations 't)
+    (company-minimum-prefix-length 1)
+    (company-idle-delay 0.1))
+#+end_src
+
+
 * Git
 
 - [[https://magit.vc/][Magit]] is an awesome UI for git operations.
@@ -54,6 +104,8 @@ To re-run it, uncomment it and C-c-c to evaluate it.
 ; (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
 #+end_src
 
+| bash | cmake | css | elisp | go | html | javascript | json | make | markdown | python | toml | tsx | typescript | yaml |
+
 
 * Javascript / Node
 
@@ -83,4 +135,25 @@ Config for the typescript-ts-mode
     (typescript-indent-level 2)
     :config
     (unbind-key "M-." typescript-ts-base-mode-map)) ; unsure why yet
+#+end_src
+
+* IntelliSense and More...
+
+#+begin_src emacs-lisp
+  (use-package eglot
+     :hook (prog-mode . eglot-ensure)
+     ;; The first 5 bindings aren't needed here, but are a good
+     ;; reminder of what they are bound too
+     :bind (("M-TAB" . completion-at-point)
+	    ("M-g i" . imenu)
+	    ("C-h ." . display-local-help)
+	    ("M-." . xref-find-definitions)
+	    ("M-," . xref-go-back)
+	    :map
+	    eglot-mode-map
+	    ("C-c c a" . eglot-code-actions)
+	    ("C-c c o" . eglot-code-actions-organize-imports)
+	    ("C-c c r" . eglot-rename)
+	    ("C-c c f" . eglot-format))
+     :config)
 #+end_src
